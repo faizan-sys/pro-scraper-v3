@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "Pro Scraper",
+  "version": "3.0",
+  "description": "Universal web scraper — auto-detects tables, grids & cards. Advanced SPA/Angular pagination, image URLs, deduplication, ProDisk filter.",
+  "permissions": ["activeTab", "scripting", "storage", "tabs", "downloads"],
+  "host_permissions": ["<all_urls>"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": { "48": "icon48.png", "128": "icon128.png" }
+  },
+  "background": { "service_worker": "background.js" },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ]
+}

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+body{width:360px;background:#0c1525;color:#e2e8f0;font-size:13px;user-select:none}
+
+/* Header */
+.hdr{display:flex;align-items:center;gap:10px;padding:11px 14px 9px;border-bottom:1px solid #1a2a3f;background:#090f1c}
+.hdr-icon{font-size:20px}
+.hdr-title{font-weight:700;font-size:14px;color:#f1f5f9;letter-spacing:-.2px}
+.hdr-sub{font-size:10px;color:#3d5470;margin-top:1px;max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hdr-right{margin-left:auto;display:flex;gap:4px}
+.ico-btn{background:none;border:none;color:#3d5470;cursor:pointer;font-size:14px;padding:4px;border-radius:4px;line-height:1}
+.ico-btn:hover{color:#93c5fd;background:#111d30}
+.badge-mode{font-size:9px;background:#1e3a5f;color:#60a5fa;padding:1px 6px;border-radius:8px;font-weight:700;letter-spacing:.3px;align-self:center}
+
+/* Detect bar */
+.detect-bar{display:flex;align-items:center;gap:6px;padding:7px 12px;background:#0a111e;border-bottom:1px solid #1a2a3f}
+.detect-info{flex:1;font-size:11px;color:#4a6280}
+.detect-info b{color:#93c5fd}
+.btn-sm{border:none;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;padding:5px 9px;transition:filter .15s}
+.btn-sm:hover:not(:disabled){filter:brightness(1.2)}
+.btn-sm:disabled{opacity:.35;cursor:not-allowed}
+.btn-detect{background:#1d4ed8;color:#fff}
+.btn-cycle{background:#1a2a3f;color:#64748b}
+.btn-cycle:hover:not(:disabled){color:#93c5fd}
+
+/* Preview */
+.preview-wrap{max-height:140px;overflow:auto;border-bottom:1px solid #1a2a3f}
+.ptbl{width:100%;border-collapse:collapse;font-size:11px}
+.ptbl th{background:#0b1728;color:#4a6280;padding:4px 8px;text-align:left;border-bottom:1px solid #1a2a3f;white-space:nowrap;position:sticky;top:0;z-index:2}
+.ptbl td{padding:3px 8px;border-bottom:1px solid #0f1a2a;color:#94a3b8;white-space:nowrap;max-width:110px;overflow:hidden;text-overflow:ellipsis}
+.ptbl tr:hover td{background:#0f1a2a}
+.p-empty{padding:14px;text-align:center;color:#1e3a5f;font-size:12px}
+
+/* Columns */
+.cols-wrap{padding:6px 12px;border-bottom:1px solid #1a2a3f;background:#090f1c}
+.cols-hdr{display:flex;justify-content:space-between;font-size:10px;color:#3d5470;margin-bottom:4px}
+.cols-hdr a{color:#3b82f6;cursor:pointer;text-decoration:none}
+.chips{display:flex;flex-wrap:wrap;gap:3px;max-height:56px;overflow:auto}
+.chip{display:flex;align-items:center;gap:3px;background:#111d30;border:1px solid #1e3a5f;border-radius:9px;padding:2px 7px 2px 5px;font-size:10px;color:#93c5fd;cursor:pointer;transition:all .1s}
+.chip.off{background:#090f1c;color:#2a3a50;border-color:#141f2e}
+.chip input{width:10px;height:10px;accent-color:#3b82f6;cursor:pointer;pointer-events:none}
+
+/* Next btn row */
+.nxt-row{display:flex;align-items:center;gap:6px;padding:5px 12px;border-bottom:1px solid #1a2a3f;background:#090f1c}
+.nxt-lbl{font-size:10px;color:#3d5470;white-space:nowrap}
+.nxt-inp{flex:1;background:#0f1a2a;border:1px solid #1e3a5f;color:#93c5fd;border-radius:4px;padding:3px 6px;font-size:10px;font-family:monospace;min-width:0}
+.nxt-dot{width:7px;height:7px;border-radius:50%;background:#f87171;flex-shrink:0;transition:background .2s}
+.nxt-dot.ok{background:#4ade80}
+
+/* Stats */
+.stats-box{padding:9px 12px;background:#0c1828;border-bottom:1px solid #1a2a3f}
+.stats-row{display:flex;justify-content:space-between;margin-bottom:5px}
+.stat{display:flex;flex-direction:column;align-items:center;flex:1}
+.sv{font-size:17px;font-weight:700;color:#f1f5f9;line-height:1}
+.sk{font-size:9px;color:#3d5470;margin-top:1px;text-transform:uppercase;letter-spacing:.5px}
+.prog{height:3px;background:#111d30;border-radius:2px;overflow:hidden;margin-bottom:5px}
+.prog-bar{height:100%;background:linear-gradient(90deg,#2563eb,#06b6d4);border-radius:2px;width:0;transition:width .35s}
+.msg-row{font-size:11px;color:#3d5470;min-height:14px;display:flex;align-items:center;gap:5px}
+.dot{width:6px;height:6px;border-radius:50%;background:#1e3a5f;flex-shrink:0}
+.dot.run{background:#4ade80;animation:blink 1s infinite}
+.dot.err{background:#f87171}
+.dot.done{background:#4ade80}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* Controls */
+.ctrl{display:flex;gap:6px;padding:9px 12px;border-bottom:1px solid #1a2a3f}
+.ctrl button,.dl button{flex:1;padding:8px 4px;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:filter .15s}
+.ctrl button:disabled,.dl button:disabled{opacity:.3;cursor:not-allowed}
+.ctrl button:not(:disabled):hover,.dl button:not(:disabled):hover{filter:brightness(1.15)}
+#btnStart{background:linear-gradient(135deg,#1d4ed8,#0891b2);color:#fff}
+#btnStop{background:#450a0a;color:#fca5a5;border:1px solid #7f1d1d}
+.dl{display:flex;gap:6px;padding:0 12px 9px}
+#btnCSV{background:#052e16;color:#6ee7b7;border:1px solid #064e3b}
+#btnXLSX{background:#1e1b4b;color:#a5b4fc;border:1px solid #312e81}
+
+/* Dedup */
+.dedup-box{padding:7px 12px;border-bottom:1px solid #1a2a3f;background:#090f1c}
+.dedup-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.dedup-title{font-size:10px;color:#3b82f6;font-weight:700;letter-spacing:.4px;text-transform:uppercase}
+.dedup-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px}
+.dedup-row label{font-size:11px;color:#64748b}
+.dedup-row select{background:#0f1a2a;border:1px solid #1e3a5f;color:#93c5fd;border-radius:4px;padding:2px 5px;font-size:10px;max-width:150px}
+.chk{display:flex;align-items:center;gap:5px}
+.chk input{accent-color:#3b82f6}
+.chk label{font-size:11px;color:#64748b}
+.dedup-stats{font-size:10px;color:#4ade80;margin-top:3px}
+
+/* ProDisk Filter */
+.pd-box{padding:8px 12px;border-bottom:1px solid #1a2a3f;background:#090f1c}
+.pd-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
+.pd-title{font-size:10px;color:#f59e0b;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.pd-status{font-size:10px;padding:1px 7px;border-radius:8px;background:#111d30;color:#4a6280;border:1px solid #1a2a3f;white-space:nowrap}
+.pd-status.loaded{background:#052e16;color:#4ade80;border-color:#14532d}
+.pd-status.loading{background:#1c1500;color:#fbbf24;border-color:#78350f}
+.pd-status.error{background:#1c0a0a;color:#f87171;border-color:#7f1d1d}
+.pd-desc{font-size:10px;color:#3d5470;margin-bottom:6px}
+.pd-btns{display:flex;gap:5px;margin-bottom:6px}
+.btn-pdload{background:#1c1500;color:#fbbf24;border:1px solid #78350f;flex:1}
+.btn-pdload:hover:not(:disabled){background:#292100;filter:none}
+.btn-pdcsv{background:#1a2a3f;color:#93c5fd;border:1px solid #1e3a5f;flex:1;text-align:center;cursor:pointer;border-radius:5px;font-size:11px;font-weight:600;padding:5px 0}
+.btn-pdclear{background:#1c0a0a;color:#f87171;border:1px solid #7f1d1d;flex:0 0 auto;padding:5px 8px}
+.pd-prog-wrap{height:3px;background:#111d30;border-radius:2px;overflow:hidden;margin-bottom:3px}
+.pd-prog{height:100%;background:linear-gradient(90deg,#d97706,#fbbf24);border-radius:2px;width:0;transition:width .3s}
+.pd-load-msg{font-size:10px;color:#78350f;margin-bottom:4px}
+.pd-result{font-size:11px;color:#fbbf24;margin-top:5px;padding:4px 6px;background:#1c1500;border-radius:4px;border:1px solid #78350f}
+.pd-result b{color:#fff}
+
+/* Settings */
+.settings{display:none;padding:9px 12px;background:#090f1c;border-top:1px solid #1a2a3f}
+.settings.open{display:block}
+.stitle{font-size:10px;color:#3b82f6;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px}
+.srow{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.srow label{font-size:11px;color:#64748b}
+.srow input,.srow select{background:#0f1a2a;border:1px solid #1e3a5f;color:#93c5fd;border-radius:4px;padding:3px 6px;font-size:11px;width:100px}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:#090f1c}
+::-webkit-scrollbar-thumb{background:#1e3a5f;border-radius:2px}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="hdr">
+  <div class="hdr-icon">⚡</div>
+  <div>
+    <div class="hdr-title">Pro Scraper <span style="font-size:10px;color:#3d5470;font-weight:400">v3</span></div>
+    <div class="hdr-sub" id="siteUrl">—</div>
+  </div>
+  <div class="hdr-right">
+    <span class="badge-mode" id="modeBadge">GENERIC</span>
+    <button class="ico-btn" id="btnGear" title="Settings">⚙</button>
+  </div>
+</div>
+
+<!-- Detect -->
+<div class="detect-bar">
+  <div class="detect-info" id="detectInfo">Click Detect to scan this page</div>
+  <button class="btn-sm btn-cycle" id="btnCycle" disabled title="Try next table">↺</button>
+  <button class="btn-sm btn-detect" id="btnDetect">⚡ Detect</button>
+</div>
+
+<!-- Preview -->
+<div class="preview-wrap" id="previewWrap">
+  <div class="p-empty">No data detected yet</div>
+</div>
+
+<!-- Columns -->
+<div class="cols-wrap" id="colsWrap" style="display:none">
+  <div class="cols-hdr">Columns &nbsp;<span><a id="colAll">All</a> · <a id="colNone">None</a></span></div>
+  <div class="chips" id="chips"></div>
+</div>
+
+<!-- Next button -->
+<div class="nxt-row">
+  <span class="nxt-lbl">Next:</span>
+  <input class="nxt-inp" id="nxtInp" placeholder="Auto-detect…"/>
+  <div class="nxt-dot" id="nxtDot"></div>
+</div>
+
+<!-- Stats -->
+<div class="stats-box">
+  <div class="stats-row">
+    <div class="stat"><div class="sv" id="svPage">—</div><div class="sk">Page</div></div>
+    <div class="stat"><div class="sv" id="svTotal">—</div><div class="sk">Pages</div></div>
+    <div class="stat"><div class="sv" id="svRows">0</div><div class="sk">Rows</div></div>
+    <div class="stat"><div class="sv" id="svETA">—</div><div class="sk">ETA</div></div>
+  </div>
+  <div class="prog"><div class="prog-bar" id="progBar"></div></div>
+  <div class="msg-row"><div class="dot" id="dot"></div><span id="msgTxt">Ready</span></div>
+</div>
+
+<!-- Controls -->
+<div class="ctrl">
+  <button id="btnStart">▶ Start Crawling</button>
+  <button id="btnStop" disabled>■ Stop</button>
+</div>
+<div class="dl">
+  <button id="btnCSV" disabled>⬇ CSV</button>
+  <button id="btnXLSX" disabled>⬇ XLSX</button>
+</div>
+
+<!-- Dedup -->
+<div class="dedup-box">
+  <div class="dedup-hdr"><span class="dedup-title">🔑 Deduplication</span></div>
+  <div class="chk" style="margin-bottom:4px">
+    <input type="checkbox" id="chkUniq"/>
+    <label for="chkUniq">Keep unique rows only</label>
+  </div>
+  <div class="dedup-row" id="keyRow" style="display:none">
+    <label>Key column</label>
+    <select id="selKey"><option value="_auto">Auto (first column)</option></select>
+  </div>
+  <div class="dedup-stats" id="dedupStats" style="display:none">
+    ✓ <b id="dKept">0</b> unique · <b id="dDrop">0</b> duplicates removed
+  </div>
+</div>
+
+<!-- ProDisk Filter -->
+<div class="pd-box" id="pdBox">
+  <div class="pd-hdr">
+    <span class="pd-title">🏪 ProDisk New SKU Filter</span>
+    <span class="pd-status" id="pdStatus">Not loaded</span>
+  </div>
+  <div class="pd-desc">Hides SKUs already in your catalog — exports only new ones</div>
+
+  <div class="pd-btns">
+    <button class="btn-sm btn-pdload" id="btnLoadApi" title="Fetch all SKUs from api.prodisknetwork.com">⬇ Load from API</button>
+    <label class="btn-sm btn-pdcsv" title="Upload your own SKU CSV">📁 Upload CSV<input type="file" id="fileCSV" accept=".csv,.txt" style="display:none"/></label>
+    <button class="btn-sm btn-pdclear" id="btnClearPD" title="Clear stored SKUs">✕ Clear</button>
+  </div>
+
+  <div id="pdLoadBar" style="display:none">
+    <div class="pd-prog-wrap"><div class="pd-prog" id="pdProg"></div></div>
+    <div class="pd-load-msg" id="pdLoadMsg">Loading…</div>
+  </div>
+
+  <div style="margin-top:5px">
+    <div class="chk">
+      <input type="checkbox" id="chkNewOnly" disabled/>
+      <label for="chkNewOnly">Export new SKUs only</label>
+    </div>
+    <div class="dedup-row" id="pdKeyRow" style="margin-top:4px">
+      <label>Compare column</label>
+      <select id="selPdKey"><option value="_auto">Auto (Part Number / SKU)</option></select>
+    </div>
+  </div>
+
+  <div class="pd-result" id="pdResult" style="display:none">
+    🆕 <b id="pdNew">0</b> new &nbsp;·&nbsp; ✓ <b id="pdHave">0</b> already in catalog
+  </div>
+</div>
+
+<!-- Settings -->
+<div class="settings" id="settingsPane">
+  <div class="stitle">⚙ Settings</div>
+  <div class="srow"><label>Min delay (ms)</label><input type="number" id="sMin" value="1200" min="0"/></div>
+  <div class="srow"><label>Max delay (ms)</label><input type="number" id="sMax" value="2800" min="100"/></div>
+  <div class="srow"><label>Max pages</label><input type="number" id="sPages" value="500" min="1"/></div>
+  <div class="srow"><label>Wait strategy</label>
+    <select id="sWait">
+      <option value="dom">DOM Change (SPA)</option>
+      <option value="fixed">Fixed Delay</option>
+    </select>
+  </div>
+  <div class="chk" style="margin-bottom:5px"><input type="checkbox" id="sImgs" checked/><label for="sImgs">Include image URLs</label></div>
+  <div class="chk"><input type="checkbox" id="sLinks" checked/><label for="sLinks">Include page links</label></div>
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>
